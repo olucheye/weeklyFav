@@ -45,14 +45,11 @@ const userSchema = new Schema({
       type: String,
       // default: get default image value hosted on cloudinary
    },
-   posts: [
-      {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: 'Post',
-         unique: true
-         // default: undefined
-      }
-   ],
+   posts:[{
+      type: Schema.Types.ObjectId,
+      ref: 'Post'
+      // unique: true
+   }],
    createdAt: {
       type: Date,
       default: Date.now
@@ -63,16 +60,21 @@ const userSchema = new Schema({
 },
 {
    timestamps: true
-}, 
-{
-   toJSON: { virtuals: true },
-   toObject: { virtuals: true }
- });
+}
+// {
+//    toJSON: { virtuals: true },
+//    toObject: { virtuals: true }
+// }
+);
+
+
+
 
 /**
- * @acti
+ * @action :Schema pre-hook to hash password before saving it to DB
  */
-userSchema.pre('save', async function(next){on :Schema pre-hook to hash password before saving it to DB
+
+userSchema.pre('save', async function(next){
    if(!this.isModified('password')){
       next()
    }
@@ -102,9 +104,12 @@ userSchema.methods = {
 }
 
 
-userSchema.virtual('posts', {
-   
-})
+// userSchema.virtual('posts', {
+//    ref: 'Post',
+//    localField: '_id',
+//    foreignField: 'author',
+//    justOne: false
+// });
 
 
 module.exports = mongoose.model('User', userSchema);

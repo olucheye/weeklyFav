@@ -28,18 +28,16 @@ exports.authenticateUser =  async (req, res, next) => {
 
 //check currently logged in user
 exports.currentUser = async(req, res, next) => {
-   const token = req.cookies.auth;
-   console.log(`:::> 1 Gotten User`);
 
    if(token){
    const decoded = await jwt.verify('token', secret);
    if(!decoded) throw new CustomError();
-   console.log(`:::> 2 Gotten User`);
+
    next();
 
    let user = await User.findById({_id:decoded._id})
    res.locals.user = user;
-   console.log(`:::> 3 Gotten User`);
+   
    next()
    }
 

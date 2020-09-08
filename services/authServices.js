@@ -72,6 +72,7 @@ exports.loginUser = async(data) => {
    }
 
    const token = generateToken(user._id);
+
    return {
       token,
       uid: user._id,
@@ -82,22 +83,24 @@ exports.loginUser = async(data) => {
 //Gets User by ID and return User object
 exports.getUserById = async (id) => {
    const userId = await User.findById({_id:id})
+
    if(!userId) throw new CustomError(`Invalid User`, 400);
    if(userId === null) throw new CustomError(`Invalid User`, 400);
+
    return userId;
 }
 
 //Finds a user account and populate the posts field with all posts created.
 exports.getAccount = async(data) => {
-   const account = await User
-                           .findById({_id: data.id})
-                           .populate('posts');
+   const account = await User.findById({_id: data.id}).populate({path: 'posts', select: '_id, link, title'});
    if(!account) throw new CustomError(`Can't get user`, 400);
-   return account.posts;
+
+   return account;
 }
 
 exports.updateAccount = async(user, data) =>{
    const update = await User.findByIdAndUpdate(user._id, data, {new: true, runValidators: true})
    if(!update) throw new CustomError(`Invalid data`, 401);
+
    return update;
 }

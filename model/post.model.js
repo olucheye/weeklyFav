@@ -19,14 +19,14 @@ const postsSchema = new Schema({
       required:[true, 'Link to post is empty']
    },
    shareCount: Number,
-   // createdAt: {
-   //    type: Date,
-   //    default: Date.now
-   // },
-   author: {
-      //refrencing user that created the post
-      type: Schema.Types.ObjectId,
-      ref: 'User'
+   createdAt: {
+      type: Date,
+      default: Date.now
+   },
+   author: { //refrencing user that created the post
+      type:  Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
    }
 },
 {timestamps: true});

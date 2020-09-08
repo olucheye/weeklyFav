@@ -5,22 +5,22 @@ const User = require('../model/user.model');
 
 //create a new post in the DB
 exports.createPost = async (user, data) => {
-   console.log(data);
    //checks if author has an exisiting post to prevent duplicate
-   const isPost = await Post.findOne({title: data.title}); //verify this implementation works
-   console.log(`:::> isPost ${isPost}  && ${user._id}`)
+   // const isPost = await Post.findOne({title: data.title}); //verify this implementation works
+   // console.log(`:::> isPost ${isPost}  && ${user._id}`)
 
-   if((isPost && isPost.author === user._id)) throw new CustomError('Duplicate post', 400);
+   // if((isPost && isPost.author === user._id)) throw new CustomError('Duplicate post', 400);
 
    let post = new Post(data);
+   
    //assign authenticated user_id to author field in post
    post.author = user._id;
    await post.save();
 
    //update Author's account with post created
-   // const userUpdate = User.findByIdAndUpdate(post.author, post._id, {new: true, runValidators: true});
    const userUpdate = await getUserById(post.author)
-   userUpdate.posts.push(post._id)
+   await userUpdate.posts.push(post);
+   await userUpdate.save();
 
    return {
       p_id: post._id,
